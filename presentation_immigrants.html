@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Not All Nonprofits are Equal - Conference Presentation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --primary: #1a365d;
+    --secondary: #2b6cb0;
+    --accent: #e53e3e;
+    --accent2: #38a169;
+    --light: #f7fafc;
+    --gray: #718096;
+    --dark: #1a202c;
+    --gold: #d69e2e;
+  }
+
+  html, body { height: 100%; overflow: hidden; font-family: 'Inter', sans-serif; background: #0f172a; }
+
+  .deck {
+    width: 100vw; height: 100vh;
+    position: relative; overflow: hidden;
+  }
+
+  .slide {
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 60px 80px;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    transform: translateX(40px);
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  }
+
+  .slide.active {
+    opacity: 1; visibility: visible; transform: translateX(0);
+  }
+
+  .slide.exit {
+    opacity: 0; transform: translateX(-40px);
+  }
+
+  /* ─── Slide Layouts ─── */
+  .slide-title {
+    background: linear-gradient(135deg, var(--primary) 0%, #2d3748 50%, #1a365d 100%);
+    color: white; text-align: center;
+    justify-content: center;
+  }
+
+  .slide-title h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.6em; font-weight: 700;
+    line-height: 1.25; max-width: 900px;
+    margin-bottom: 30px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+
+  .slide-title .subtitle {
+    font-size: 1.05em; font-weight: 300;
+    opacity: 0.85; letter-spacing: 0.5px;
+    margin-bottom: 40px;
+  }
+
+  .slide-title .authors {
+    font-size: 0.95em; font-weight: 400;
+    opacity: 0.9; line-height: 1.8;
+  }
+
+  .slide-title .authors span {
+    display: block; font-weight: 300; font-size: 0.85em; opacity: 0.7;
+  }
+
+  .slide-section {
+    background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+    color: white; text-align: center;
+  }
+
+  .slide-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8em; font-weight: 700;
+    margin-bottom: 15px;
+  }
+
+  .slide-section .section-num {
+    font-size: 1em; text-transform: uppercase;
+    letter-spacing: 4px; opacity: 0.6; margin-bottom: 10px;
+  }
+
+  .slide-section .section-desc {
+    font-size: 1.05em; opacity: 0.75; font-weight: 300; margin-top: 15px;
+  }
+
+  /* Content slides */
+  .slide-content {
+    align-items: flex-start; justify-content: flex-start;
+    padding: 50px 80px;
+  }
+
+  .slide-content .slide-header {
+    width: 100%; margin-bottom: 35px;
+    padding-bottom: 15px;
+    border-bottom: 3px solid var(--secondary);
+  }
+
+  .slide-content h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8em; color: var(--primary);
+    font-weight: 700;
+  }
+
+  .slide-content h3 {
+    font-size: 1.15em; color: var(--secondary);
+    font-weight: 600; margin: 20px 0 12px;
+  }
+
+  .slide-content p, .slide-content li {
+    font-size: 0.95em; line-height: 1.7; color: var(--dark);
+  }
+
+  .slide-content ul { list-style: none; padding: 0; width: 100%; }
+  .slide-content ul li {
+    padding: 8px 0 8px 30px; position: relative;
+  }
+  .slide-content ul li::before {
+    content: ''; position: absolute; left: 6px; top: 17px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--secondary);
+  }
+
+  .slide-content .highlight {
+    background: linear-gradient(120deg, rgba(43,108,176,0.08) 0%, rgba(43,108,176,0.15) 100%);
+    border-left: 4px solid var(--secondary);
+    padding: 15px 20px; border-radius: 0 8px 8px 0;
+    margin: 15px 0; font-size: 0.95em;
+  }
+
+  .slide-content .highlight.red {
+    background: linear-gradient(120deg, rgba(229,62,62,0.05) 0%, rgba(229,62,62,0.12) 100%);
+    border-left-color: var(--accent);
+  }
+
+  .slide-content .highlight.green {
+    background: linear-gradient(120deg, rgba(56,161,105,0.05) 0%, rgba(56,161,105,0.12) 100%);
+    border-left-color: var(--accent2);
+  }
+
+  .slide-content .highlight.gold {
+    background: linear-gradient(120deg, rgba(214,158,46,0.05) 0%, rgba(214,158,46,0.12) 100%);
+    border-left-color: var(--gold);
+  }
+
+  /* Two-column layout */
+  .cols { display: flex; gap: 40px; width: 100%; flex: 1; }
+  .col { flex: 1; }
+
+  /* Cards */
+  .card {
+    background: white; border-radius: 12px;
+    padding: 20px 24px; margin: 10px 0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid #e2e8f0;
+  }
+
+  .card-icon { font-size: 1.5em; margin-bottom: 8px; }
+  .card h4 {
+    font-size: 0.95em; color: var(--primary);
+    font-weight: 600; margin-bottom: 6px;
+  }
+  .card p { font-size: 0.82em; color: var(--gray); line-height: 1.55; }
+
+  /* Tables */
+  .data-table {
+    width: 100%; border-collapse: collapse;
+    font-size: 0.82em; margin-top: 10px;
+  }
+
+  .data-table th {
+    background: var(--primary); color: white;
+    padding: 10px 14px; text-align: left;
+    font-weight: 600; font-size: 0.9em;
+  }
+
+  .data-table td {
+    padding: 9px 14px; border-bottom: 1px solid #e2e8f0;
+    color: var(--dark);
+  }
+
+  .data-table tr:nth-child(even) { background: #f7fafc; }
+  .data-table .sig { color: var(--accent); font-weight: 600; }
+  .data-table .pos { color: var(--accent2); font-weight: 600; }
+  .data-table .neg { color: var(--accent); font-weight: 600; }
+  .data-table .ns { color: var(--gray); }
+
+  /* Hypothesis boxes */
+  .hypo {
+    display: flex; align-items: center; gap: 15px;
+    padding: 14px 20px; border-radius: 10px;
+    margin: 8px 0; background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #e2e8f0;
+  }
+
+  .hypo .tag {
+    font-size: 0.75em; font-weight: 700;
+    padding: 4px 10px; border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .hypo .tag.blue { background: #ebf4ff; color: var(--secondary); }
+  .hypo .tag.red { background: #fff5f5; color: var(--accent); }
+  .hypo .tag.green { background: #f0fff4; color: var(--accent2); }
+  .hypo p { font-size: 0.88em; color: var(--dark); line-height: 1.5; }
+
+  /* Stats bar */
+  .stat-row {
+    display: flex; gap: 20px; margin: 10px 0; width: 100%;
+  }
+
+  .stat-box {
+    flex: 1; text-align: center;
+    background: white; border-radius: 12px;
+    padding: 18px 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid #e2e8f0;
+  }
+
+  .stat-box .num {
+    font-size: 1.8em; font-weight: 700;
+    color: var(--secondary); line-height: 1;
+  }
+
+  .stat-box .label {
+    font-size: 0.72em; color: var(--gray);
+    margin-top: 6px; text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Result indicator */
+  .result-badge {
+    display: inline-block; padding: 3px 10px;
+    border-radius: 20px; font-size: 0.75em;
+    font-weight: 600;
+  }
+  .result-badge.supported { background: #f0fff4; color: var(--accent2); }
+  .result-badge.not-supported { background: #fff5f5; color: var(--accent); }
+  .result-badge.mixed { background: #fffbeb; color: var(--gold); }
+
+  /* Diagram */
+  .diagram-box {
+    background: white; border-radius: 16px;
+    padding: 30px; margin: 15px auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    border: 1px solid #e2e8f0;
+    text-align: center; max-width: 800px;
+    width: 100%;
+  }
+
+  .arrow-flow {
+    display: flex; align-items: center;
+    justify-content: center; gap: 10px;
+    flex-wrap: wrap; margin: 10px 0;
+  }
+
+  .flow-box {
+    padding: 12px 20px; border-radius: 10px;
+    font-size: 0.85em; font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .flow-box.iv { background: #ebf4ff; color: var(--secondary); border: 2px solid var(--secondary); }
+  .flow-box.dv { background: #1a365d; color: white; }
+  .flow-box.pos { background: #f0fff4; color: var(--accent2); border: 2px solid var(--accent2); }
+  .flow-box.neg { background: #fff5f5; color: var(--accent); border: 2px solid var(--accent); }
+  .flow-box.ns-box { background: #f7fafc; color: var(--gray); border: 2px dashed var(--gray); }
+
+  .flow-arrow {
+    font-size: 1.3em; color: var(--gray);
+  }
+
+  /* Navigation */
+  .nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between;
+    align-items: center; padding: 12px 30px;
+    background: rgba(26, 32, 44, 0.92);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+  }
+
+  .nav button {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white; padding: 8px 20px;
+    border-radius: 6px; cursor: pointer;
+    font-size: 0.85em; font-family: 'Inter', sans-serif;
+    transition: background 0.2s;
+  }
+
+  .nav button:hover { background: rgba(255,255,255,0.2); }
+  .nav button:disabled { opacity: 0.3; cursor: default; }
+
+  .nav .progress {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.8em; font-weight: 500;
+  }
+
+  .progress-bar {
+    position: fixed; top: 0; left: 0; height: 3px;
+    background: linear-gradient(90deg, var(--secondary), var(--accent));
+    transition: width 0.4s ease; z-index: 1001;
+  }
+
+  /* Footnote */
+  .footnote {
+    position: absolute; bottom: 60px; left: 80px; right: 80px;
+    font-size: 0.7em; color: var(--gray);
+    border-top: 1px solid #e2e8f0;
+    padding-top: 8px;
+  }
+
+  /* Final slide */
+  .slide-final {
+    background: linear-gradient(135deg, var(--primary) 0%, #2d3748 100%);
+    color: white; text-align: center;
+  }
+
+  .slide-final h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5em; margin-bottom: 30px;
+  }
+
+  .slide-final p {
+    font-size: 1.05em; opacity: 0.8; line-height: 1.8;
+  }
+
+  .mini-label {
+    font-size: 0.7em; text-transform: uppercase;
+    letter-spacing: 1.5px; color: var(--gray);
+    font-weight: 600; margin-bottom: 6px;
+  }
+
+  .emphasis {
+    font-weight: 600; color: var(--secondary);
+  }
+
+  .text-accent { color: var(--accent); font-weight: 600; }
+  .text-green { color: var(--accent2); font-weight: 600; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .slide { padding: 30px 40px; }
+    .slide-content { padding: 30px 40px; }
+    .slide-title h1 { font-size: 1.8em; }
+    .cols { flex-direction: column; gap: 20px; }
+  }
+
+  /* Animations */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .slide.active .anim { animation: fadeInUp 0.5s ease forwards; }
+  .slide.active .anim-d1 { animation-delay: 0.1s; opacity: 0; }
+  .slide.active .anim-d2 { animation-delay: 0.2s; opacity: 0; }
+  .slide.active .anim-d3 { animation-delay: 0.3s; opacity: 0; }
+  .slide.active .anim-d4 { animation-delay: 0.4s; opacity: 0; }
+  .slide.active .anim-d5 { animation-delay: 0.5s; opacity: 0; }
+  .slide.active .anim-d6 { animation-delay: 0.6s; opacity: 0; }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="deck" id="deck">
+
+<!-- ============ SLIDE 1: TITLE ============ -->
+<div class="slide slide-title active" data-slide="0">
+  <div class="subtitle anim anim-d1">Conference Presentation</div>
+  <h1 class="anim anim-d2">Not All Nonprofits Are Equal:<br>Do Organizational Characteristics Matter for Acceptance of Immigrants?</h1>
+  <div class="authors anim anim-d3">
+    <strong>Jung Wook Kim</strong> <span>University of Seoul</span>
+    <strong>Yiinjung Kim</strong> <span>Korea University</span>
+    <strong>Jihoon Jeong</strong> <span>Texas A&amp;M International University</span>
+  </div>
+</div>
+
+<!-- ============ SLIDE 2: SECTION - Introduction ============ -->
+<div class="slide slide-section" data-slide="1">
+  <div class="section-num anim anim-d1">Part I</div>
+  <h2 class="anim anim-d2">Introduction</h2>
+  <div class="section-desc anim anim-d3">Why This Research Matters</div>
+</div>
+
+<!-- ============ SLIDE 3: Background ============ -->
+<div class="slide slide-content" data-slide="2">
+  <div class="slide-header"><h2>Background: Immigration in South Korea</h2></div>
+  <div class="stat-row anim anim-d1">
+    <div class="stat-box">
+      <div class="num">919K</div>
+      <div class="label">Foreign Population (2010)</div>
+    </div>
+    <div class="stat-box">
+      <div class="num" style="color: var(--accent);">1.49M</div>
+      <div class="label">Foreign Population (2024)</div>
+    </div>
+    <div class="stat-box">
+      <div class="num" style="color: var(--accent2);">+62%</div>
+      <div class="label">Growth Rate</div>
+    </div>
+  </div>
+  <ul class="anim anim-d2">
+    <li>Immigrants arriving from increasingly diverse origins: <strong>Vietnam, Nepal, Indonesia, Uzbekistan</strong></li>
+    <li>Rising social challenges: enclave settlement, intergroup conflict, social fragmentation</li>
+    <li><span class="emphasis">Public acceptance</span> &mdash; the willingness of host communities to receive and include immigrants &mdash; is a critical concern</li>
+  </ul>
+  <div class="footnote">Source: KOSIS (2024), Korea Immigration Service</div>
+</div>
+
+<!-- ============ SLIDE 4: Role of NPOs ============ -->
+<div class="slide slide-content" data-slide="3">
+  <div class="slide-header"><h2>Nonprofits and Immigrant Integration</h2></div>
+  <p class="anim anim-d1" style="margin-bottom:15px; color: var(--gray);">Immigrants face barriers accessing government services due to language, administrative complexity, and limited legal rights.</p>
+  <div class="cols anim anim-d2">
+    <div class="card">
+      <div class="card-icon">&#x1F4CB;</div>
+      <h4>Service Providers</h4>
+      <p>Delivering legal, social, and employment services that immigrants cannot access through public institutions</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#x1F91D;</div>
+      <h4>Mediating Organizations</h4>
+      <p>Bridging immigrants and mainstream society through civic incorporation and representation</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">&#x1F4E1;</div>
+      <h4>Disseminators of Values</h4>
+      <p>Transmitting new perspectives to local communities, reducing prejudice and enhancing understanding</p>
+    </div>
+  </div>
+  <div class="highlight anim anim-d3">
+    <strong>Key Insight:</strong> The <span class="emphasis">disseminative function</span> of NPOs &mdash; spreading new values and knowledge &mdash; has been underexplored in the literature.
+  </div>
+</div>
+
+<!-- ============ SLIDE 5: Research Gap ============ -->
+<div class="slide slide-content" data-slide="4">
+  <div class="slide-header"><h2>Research Gap &amp; Purpose</h2></div>
+  <div class="cols">
+    <div class="col anim anim-d1">
+      <h3>What We Know</h3>
+      <ul>
+        <li>Individual and social factors shaping attitudes toward immigrants</li>
+        <li>NPOs as service providers and mediators for immigrants</li>
+        <li>Research concentrated in Europe &amp; North America</li>
+      </ul>
+    </div>
+    <div class="col anim anim-d2">
+      <h3>What We Don't Know</h3>
+      <ul>
+        <li>Whether NPOs directly influence <em>public acceptance</em> of immigrants</li>
+        <li>How <strong>organizational characteristics</strong> shape this influence</li>
+        <li>Whether findings apply to non-Western, emerging immigration contexts</li>
+      </ul>
+    </div>
+  </div>
+  <div class="highlight gold anim anim-d3">
+    <strong>Research Question:</strong> Do nonprofit organizational characteristics &mdash; specifically member heterogeneity vs. homogeneity &mdash; differentially affect local residents' acceptance of immigrants?
+  </div>
+</div>
+
+<!-- ============ SLIDE 6: SECTION - Theory ============ -->
+<div class="slide slide-section" data-slide="5">
+  <div class="section-num anim anim-d1">Part II</div>
+  <h2 class="anim anim-d2">Theoretical Framework</h2>
+  <div class="section-desc anim anim-d3">Organizational Characteristics &amp; Acceptance</div>
+</div>
+
+<!-- ============ SLIDE 7: Theory ============ -->
+<div class="slide slide-content" data-slide="6">
+  <div class="slide-header"><h2>Theoretical Foundations</h2></div>
+  <div class="cols">
+    <div class="col anim anim-d1">
+      <div class="card" style="border-left: 4px solid var(--secondary);">
+        <h4>Disseminative Function (Frumkin, 2002)</h4>
+        <p>NPOs provide new values, perspectives, and knowledge to communities &mdash; correcting misconceptions and fostering acceptance through information sharing.</p>
+      </div>
+      <div class="card" style="border-left: 4px solid var(--accent2);">
+        <h4>Social Capital Theory (Putnam, 2000)</h4>
+        <p><strong>Bridging social capital</strong> (heterogeneous ties) promotes openness to diversity, while <strong>bonding social capital</strong> (homogeneous ties) reinforces ingroup solidarity.</p>
+      </div>
+    </div>
+    <div class="col anim anim-d2">
+      <div class="card" style="border-left: 4px solid var(--gold);">
+        <h4>Mediating Structures (Berger &amp; Neuhaus, 1977)</h4>
+        <p>NPOs mediate between individuals and larger institutions, shaping how communities encounter and process diversity.</p>
+      </div>
+      <div class="card" style="border-left: 4px solid var(--accent);">
+        <h4>Organizational Characteristics (Anheier, 2006)</h4>
+        <p>NPOs are not monolithic &mdash; their mission, composition, and constituency vary, shaping the nature and impact of their activities.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SLIDE 8: Heterogeneous vs Homogeneous ============ -->
+<div class="slide slide-content" data-slide="7">
+  <div class="slide-header"><h2>Heterogeneous vs. Homogeneous NPOs</h2></div>
+  <div class="cols">
+    <div class="col anim anim-d1">
+      <div class="card" style="border: 2px solid var(--accent2); background: #f0fff4;">
+        <h4 style="color: var(--accent2);">Heterogeneous NPOs</h4>
+        <p style="margin-top:8px;"><strong>Membership:</strong> Diverse backgrounds<br>
+        <strong>Examples:</strong> Voluntary orgs, environmental groups, advocacy orgs, hobby groups, educational associations<br><br>
+        <strong>Mechanism:</strong> Exposure to diverse perspectives fosters multidimensional thinking, cross-cultural understanding, and acceptance of immigrants</p>
+      </div>
+    </div>
+    <div class="col anim anim-d2">
+      <div class="card" style="border: 2px solid var(--accent); background: #fff5f5;">
+        <h4 style="color: var(--accent);">Homogeneous NPOs</h4>
+        <p style="margin-top:8px;"><strong>Membership:</strong> Shared backgrounds<br>
+        <strong>Examples:</strong> Occupational associations, alumni groups, hometown associations, kinship groups<br><br>
+        <strong>Mechanism:</strong> Reinforces existing perspectives, limits exchange of diverse viewpoints, may reduce openness to immigrants</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SLIDE 9: Hypotheses ============ -->
+<div class="slide slide-content" data-slide="8">
+  <div class="slide-header"><h2>Hypotheses</h2></div>
+  <div style="width: 100%;">
+    <div class="hypo anim anim-d1">
+      <div class="tag blue">H1</div>
+      <p>Nonprofit organizations engaged in immigrant-related activities are <strong>positively</strong> associated with public acceptance of immigrants.</p>
+    </div>
+    <div class="hypo anim anim-d2">
+      <div class="tag green">H2a</div>
+      <p>Participation in <span class="text-green">heterogeneous</span> nonprofit organizations is <strong>positively</strong> associated with public acceptance of immigrants.</p>
+    </div>
+    <div class="hypo anim anim-d3">
+      <div class="tag red">H2b</div>
+      <p>Participation in <span class="text-accent">homogeneous</span> nonprofit organizations is <strong>negatively</strong> associated with public acceptance of immigrants.</p>
+    </div>
+  </div>
+  <div class="diagram-box anim anim-d4" style="margin-top: 20px;">
+    <div class="arrow-flow">
+      <div class="flow-box iv">NPO Presence</div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-box dv" style="font-size: 0.95em;">Immigrant<br>Acceptance</div>
+      <div class="flow-arrow">&larr;</div>
+      <div class="flow-box pos">Heterogeneous (+)</div>
+    </div>
+    <div class="arrow-flow" style="margin-top: 8px;">
+      <div class="flow-box neg" style="margin-left: auto; margin-right: 60px;">Homogeneous (&minus;)</div>
+      <div class="flow-arrow">&nearr;</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SLIDE 10: SECTION - Methods ============ -->
+<div class="slide slide-section" data-slide="9">
+  <div class="section-num anim anim-d1">Part III</div>
+  <h2 class="anim anim-d2">Data &amp; Methods</h2>
+  <div class="section-desc anim anim-d3">Empirical Research Design</div>
+</div>
+
+<!-- ============ SLIDE 11: Data ============ -->
+<div class="slide slide-content" data-slide="10">
+  <div class="slide-header"><h2>Data: The Suwon Survey 2024</h2></div>
+  <div class="stat-row anim anim-d1">
+    <div class="stat-box">
+      <div class="num">3,028</div>
+      <div class="label">Respondents</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">44</div>
+      <div class="label">Dong (Neighborhoods)</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">1.24M</div>
+      <div class="label">Suwon Population</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">6.7%</div>
+      <div class="label">Foreign Residents</div>
+    </div>
+  </div>
+  <div class="cols anim anim-d2">
+    <div class="col">
+      <h3>Why Suwon?</h3>
+      <ul>
+        <li>Metropolitan city in Gyeonggi Province</li>
+        <li>Sizable &amp; diverse immigrant population (82,000+)</li>
+        <li>Rich community-level data available</li>
+        <li>Active nonprofit ecosystem</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>Method</h3>
+      <ul>
+        <li><strong>Multiple regression analysis</strong> (OLS)</li>
+        <li>Individual-level survey data + community-level administrative data</li>
+        <li>CFA for construct validity of composite indices</li>
+        <li>VIF &lt; 10 confirming no multicollinearity</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SLIDE 12: Variables ============ -->
+<div class="slide slide-content" data-slide="11">
+  <div class="slide-header"><h2>Key Variables</h2></div>
+  <div class="cols">
+    <div class="col anim anim-d1">
+      <div class="mini-label">Dependent Variable</div>
+      <div class="card" style="border-left: 4px solid var(--primary);">
+        <h4>Acceptance toward Immigrants</h4>
+        <p>Composite index (0&ndash;10) from 9 survey items measuring willingness to accept foreign workers, North Korean defectors, and refugees as coworkers, friends, and marriage partners.</p>
+        <p style="margin-top:6px;"><strong>Mean = 4.37</strong> (SD = 2.85)</p>
+      </div>
+      <div class="mini-label" style="margin-top:15px;">Independent Variables</div>
+      <div class="card" style="border-left: 4px solid var(--secondary);">
+        <h4>NPO Presence</h4>
+        <p>Number of immigrant-related NPOs per dong (neighborhood)</p>
+      </div>
+    </div>
+    <div class="col anim anim-d2">
+      <div class="card" style="border-left: 4px solid var(--accent2);">
+        <h4>Heterogeneous NPO Participation</h4>
+        <p>Binary: participation in voluntary, environmental, advocacy, hobby, educational, or parent organizations</p>
+      </div>
+      <div class="card" style="border-left: 4px solid var(--accent);">
+        <h4>Homogeneous NPO Participation</h4>
+        <p>Binary: participation in occupational, alumni, hometown, or kinship organizations</p>
+      </div>
+      <div class="mini-label" style="margin-top:15px;">17 Control Variables</div>
+      <div class="card">
+        <p style="font-size:0.82em;">Age, Gender, Education, Religion, Life Satisfaction, Attitudes toward Minorities, Donation Experience, Retirement Readiness, Household Income, Homeownership, SES, Child-friendly Environment, Foreign-born Ratio, Public Transportation</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SLIDE 13: SECTION - Results ============ -->
+<div class="slide slide-section" data-slide="12">
+  <div class="section-num anim anim-d1">Part IV</div>
+  <h2 class="anim anim-d2">Findings</h2>
+  <div class="section-desc anim anim-d3">Regression Results &amp; Discussion</div>
+</div>
+
+<!-- ============ SLIDE 14: Main Results ============ -->
+<div class="slide slide-content" data-slide="13">
+  <div class="slide-header"><h2>Regression Results: Key Variables</h2></div>
+  <table class="data-table anim anim-d1">
+    <thead>
+      <tr>
+        <th>Variable</th>
+        <th>Beta</th>
+        <th>Std. Err.</th>
+        <th>VIF</th>
+        <th>Significance</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>NPO Presence (H1)</strong></td>
+        <td class="neg">&minus;0.351</td>
+        <td>0.078</td>
+        <td>1.06</td>
+        <td class="sig">p &lt; 0.01 ***</td>
+      </tr>
+      <tr>
+        <td><strong>Heterogeneous NPO (H2a)</strong></td>
+        <td class="pos">+0.552</td>
+        <td>0.116</td>
+        <td>1.26</td>
+        <td class="sig">p &lt; 0.01 ***</td>
+      </tr>
+      <tr>
+        <td><strong>Homogeneous NPO (H2b)</strong></td>
+        <td class="ns">&minus;0.175</td>
+        <td>0.128</td>
+        <td>1.22</td>
+        <td class="ns">p = 0.173 (n.s.)</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="stat-row anim anim-d2" style="margin-top: 15px;">
+    <div class="stat-box">
+      <div class="num">3,028</div>
+      <div class="label">Observations</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">.122</div>
+      <div class="label">Adj. R&sup2;</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">25.62</div>
+      <div class="label">F-value ***</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SLIDE 15: Hypothesis Summary ============ -->
+<div class="slide slide-content" data-slide="14">
+  <div class="slide-header"><h2>Hypothesis Testing Summary</h2></div>
+  <div style="width:100%;">
+    <div class="hypo anim anim-d1">
+      <div class="tag blue">H1</div>
+      <div style="flex:1;">
+        <p>NPO presence &rarr; Immigrant acceptance</p>
+        <p style="font-size:0.82em; color: var(--gray); margin-top:4px;">Expected: positive &nbsp;|&nbsp; Found: <strong class="text-accent">negative (&#946; = &minus;0.351***)</strong></p>
+      </div>
+      <div class="result-badge not-supported">Not Supported</div>
+    </div>
+    <div class="hypo anim anim-d2">
+      <div class="tag green">H2a</div>
+      <div style="flex:1;">
+        <p>Heterogeneous NPO &rarr; Immigrant acceptance</p>
+        <p style="font-size:0.82em; color: var(--gray); margin-top:4px;">Expected: positive &nbsp;|&nbsp; Found: <strong class="text-green">positive (&#946; = +0.552***)</strong></p>
+      </div>
+      <div class="result-badge supported">Supported</div>
+    </div>
+    <div class="hypo anim anim-d3">
+      <div class="tag red">H2b</div>
+      <div style="flex:1;">
+        <p>Homogeneous NPO &rarr; Immigrant acceptance</p>
+        <p style="font-size:0.82em; color: var(--gray); margin-top:4px;">Expected: negative &nbsp;|&nbsp; Found: <strong style="color: var(--gray);">negative but n.s. (&#946; = &minus;0.175)</strong></p>
+      </div>
+      <div class="result-badge mixed">Direction Only</div>
+    </div>
+  </div>
+  <div class="diagram-box anim anim-d4" style="margin-top: 15px;">
+    <div class="arrow-flow">
+      <div class="flow-box neg">NPO Presence<br><small>&minus;0.351***</small></div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-box dv" style="padding: 15px 25px;">Immigrant<br>Acceptance</div>
+      <div class="flow-arrow">&larr;</div>
+      <div class="flow-box pos">Heterogeneous NPO<br><small>+0.552***</small></div>
+    </div>
+    <div class="arrow-flow" style="margin-top: 6px;">
+      <div class="flow-box ns-box" style="margin-left: auto; margin-right: 30px;">Homogeneous NPO<br><small>&minus;0.175 (n.s.)</small></div>
+      <div class="flow-arrow" style="margin-right: 180px;">&nearr;</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SLIDE 16: Discussion H1 ============ -->
+<div class="slide slide-content" data-slide="15">
+  <div class="slide-header"><h2>Discussion: Why the Unexpected H1 Result?</h2></div>
+  <div class="highlight red anim anim-d1">
+    <strong>Counterintuitive Finding:</strong> More NPOs in a neighborhood = <em>lower</em> immigrant acceptance (&#946; = &minus;0.351***)
+  </div>
+  <div class="cols anim anim-d2">
+    <div class="col">
+      <h3>Possible Explanations</h3>
+      <ul>
+        <li><strong>Selection effect:</strong> NPOs concentrate in communities with high immigrant density &mdash; where tensions are already salient</li>
+        <li>Residents perceive immigrant-related issues as <strong>pressing local problems</strong> requiring resolution</li>
+        <li>Low-density or superficial contact may <strong>heighten threat perceptions</strong> rather than foster acceptance (Bentsen, 2022)</li>
+      </ul>
+    </div>
+    <div class="col">
+      <h3>Implications</h3>
+      <ul>
+        <li>NPO presence reflects community <strong>salience of immigrant tensions</strong>, not a direct acceptance mechanism</li>
+        <li>Mere organizational presence is insufficient &mdash; the <strong>quality of engagement</strong> matters</li>
+        <li>NPOs should cultivate <strong>dense and meaningful relationships</strong> with local residents</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SLIDE 17: Discussion H2 ============ -->
+<div class="slide slide-content" data-slide="16">
+  <div class="slide-header"><h2>Discussion: Organizational Characteristics Matter</h2></div>
+  <div class="cols">
+    <div class="col anim anim-d1">
+      <div class="highlight green">
+        <strong>H2a Supported</strong> (&#946; = +0.552, p &lt; 0.01)
+      </div>
+      <ul>
+        <li>Diverse membership exposes individuals to <strong>varied perspectives and cross-cultural knowledge</strong></li>
+        <li>Fosters <strong>multidimensional thinking</strong> about social phenomena</li>
+        <li>Deepens understanding of culturally distinct practices</li>
+        <li>Consistent with Putnam's <strong>bridging social capital</strong></li>
+      </ul>
+    </div>
+    <div class="col anim anim-d2">
+      <div class="highlight red">
+        <strong>H2b Direction Consistent</strong> (&#946; = &minus;0.175, p = .173)
+      </div>
+      <ul>
+        <li>Shared backgrounds lead to <strong>uniform information circulation</strong></li>
+        <li>Reinforces existing perspectives rather than facilitating diverse exchange</li>
+        <li>Consistent with <strong>bonding social capital</strong> mechanisms</li>
+        <li>With refined measurement, the effect may reach statistical significance</li>
+      </ul>
+    </div>
+  </div>
+  <div class="highlight gold anim anim-d3">
+    <strong>Key Takeaway:</strong> The divergence between heterogeneous (+) and homogeneous (&minus;) NPOs confirms that <span class="emphasis">organizational composition matters</span> in shaping attitudes toward immigrants.
+  </div>
+</div>
+
+<!-- ============ SLIDE 18: Control Variables ============ -->
+<div class="slide slide-content" data-slide="17">
+  <div class="slide-header"><h2>Notable Control Variable Results</h2></div>
+  <div class="cols">
+    <div class="col anim anim-d1">
+      <div class="mini-label">Positive Effects on Acceptance</div>
+      <table class="data-table">
+        <thead><tr><th>Variable</th><th>Beta</th></tr></thead>
+        <tbody>
+          <tr><td>Donation experience</td><td class="pos">+1.003***</td></tr>
+          <tr><td>Retirement readiness</td><td class="pos">+0.477***</td></tr>
+          <tr><td>Child-friendly environment</td><td class="pos">+0.122***</td></tr>
+          <tr><td>Household income</td><td class="pos">+0.106***</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col anim anim-d2">
+      <div class="mini-label">Negative Effects on Acceptance</div>
+      <table class="data-table">
+        <thead><tr><th>Variable</th><th>Beta</th></tr></thead>
+        <tbody>
+          <tr><td>Protestant religion</td><td class="neg">&minus;0.730***</td></tr>
+          <tr><td>Homeownership</td><td class="neg">&minus;0.427***</td></tr>
+          <tr><td>Education (bachelor+)</td><td class="neg">&minus;0.337***</td></tr>
+          <tr><td>Life satisfaction</td><td class="neg">&minus;0.230***</td></tr>
+          <tr><td>Public transportation</td><td class="neg">&minus;0.214**</td></tr>
+          <tr><td>SES</td><td class="neg">&minus;0.188***</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="highlight anim anim-d3">
+    <strong>Interpretation:</strong> Economic security (income, retirement) promotes acceptance, while status preservation concerns (homeownership, SES) reduce it &mdash; consistent with threat theory (Jetten et al., 2015).
+  </div>
+</div>
+
+<!-- ============ SLIDE 19: SECTION - Conclusion ============ -->
+<div class="slide slide-section" data-slide="18">
+  <div class="section-num anim anim-d1">Part V</div>
+  <h2 class="anim anim-d2">Contributions &amp; Implications</h2>
+  <div class="section-desc anim anim-d3">What This Means for Research &amp; Practice</div>
+</div>
+
+<!-- ============ SLIDE 20: Contributions ============ -->
+<div class="slide slide-content" data-slide="19">
+  <div class="slide-header"><h2>Scholarly Contributions</h2></div>
+  <div style="width:100%;">
+    <div class="card anim anim-d1" style="border-left: 4px solid var(--secondary);">
+      <h4>1. Theoretical Advancement</h4>
+      <p>Explicates the <strong>disseminative role</strong> of NPOs as a determinant of immigrant acceptance, moving beyond service provision and mediation frameworks to focus on value transmission mechanisms.</p>
+    </div>
+    <div class="card anim anim-d2" style="border-left: 4px solid var(--accent2);">
+      <h4>2. Organizational Characteristics as Differentiator</h4>
+      <p>Demonstrates that NPOs are <strong>not monolithic</strong>: heterogeneous and homogeneous organizations exert divergent effects on acceptance &mdash; a critical nuance absent from prior research.</p>
+    </div>
+    <div class="card anim anim-d3" style="border-left: 4px solid var(--gold);">
+      <h4>3. Non-Western Context</h4>
+      <p>Extends immigration research to <strong>South Korea</strong>, enriching the literature with insights from a culturally distinct, rapidly diversifying society.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SLIDE 21: Policy Implications ============ -->
+<div class="slide slide-content" data-slide="20">
+  <div class="slide-header"><h2>Practical &amp; Policy Implications</h2></div>
+  <div class="cols">
+    <div class="col anim anim-d1">
+      <div class="card" style="border: 2px solid var(--accent2); text-align: center; padding: 25px;">
+        <div style="font-size: 2em; margin-bottom: 10px;">&#x2705;</div>
+        <h4 style="color: var(--accent2);">Support Heterogeneous NPOs</h4>
+        <p style="margin-top:8px;">Policies should promote <strong>diverse civic associations</strong> that bring together members from varied backgrounds &mdash; these are the organizations that measurably increase immigrant acceptance.</p>
+      </div>
+    </div>
+    <div class="col anim anim-d2">
+      <div class="card" style="border: 2px solid var(--secondary); text-align: center; padding: 25px;">
+        <div style="font-size: 2em; margin-bottom: 10px;">&#x1F4AC;</div>
+        <h4>Deepen Community Engagement</h4>
+        <p style="margin-top:8px;">NPO <em>presence</em> alone is insufficient. Organizations must cultivate <strong>dense, meaningful interactions</strong> with local residents to transform attitudes, not just signal immigrant-related tensions.</p>
+      </div>
+    </div>
+  </div>
+  <div class="highlight anim anim-d3">
+    <strong>For Policymakers:</strong> Rather than simply increasing NPO numbers in immigrant-dense areas, invest in programs that promote <span class="emphasis">cross-cultural dialogue through diverse civic participation</span>.
+  </div>
+</div>
+
+<!-- ============ SLIDE 22: Limitations ============ -->
+<div class="slide slide-content" data-slide="21">
+  <div class="slide-header"><h2>Limitations &amp; Future Research</h2></div>
+  <div style="width:100%;">
+    <div class="cols">
+      <div class="col anim anim-d1">
+        <h3>Limitations</h3>
+        <ul>
+          <li><strong>Single city case:</strong> Suwon may not represent broader Korean or non-Western contexts</li>
+          <li><strong>Cross-sectional data:</strong> Limits causal inference; panel data would strengthen findings</li>
+          <li><strong>Narrow NPO measurement:</strong> Only counts organizations; does not capture quality, scope, or intensity of activities</li>
+          <li><strong>Self-reported data:</strong> Possible measurement imprecision in perception-based items</li>
+        </ul>
+      </div>
+      <div class="col anim anim-d2">
+        <h3>Future Directions</h3>
+        <ul>
+          <li>Use <strong>nationally representative data</strong> across multiple Korean cities</li>
+          <li>Employ <strong>longitudinal designs</strong> to establish causal pathways</li>
+          <li>Develop <strong>multi-dimensional measures</strong> of NPO activity (types, intensity, quality of engagement)</li>
+          <li>Explore <strong>cross-national comparisons</strong> with other emerging immigration destinations in Asia</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SLIDE 23: Conclusion Summary ============ -->
+<div class="slide slide-content" data-slide="22">
+  <div class="slide-header"><h2>Summary of Key Findings</h2></div>
+  <div class="diagram-box anim anim-d1">
+    <p style="font-size: 1.1em; font-weight: 600; color: var(--primary); margin-bottom: 20px;">
+      Not All Nonprofits Are Equal
+    </p>
+    <div class="arrow-flow" style="margin-bottom: 15px;">
+      <div class="flow-box neg" style="min-width: 200px;">NPO Presence<br><small>&#946; = &minus;0.351***</small></div>
+      <div class="flow-arrow" style="font-size:1.5em;">&rarr;</div>
+      <div class="flow-box dv" style="min-width: 200px; padding: 20px;">Immigrant<br>Acceptance<br><small>(Mean = 4.37/10)</small></div>
+      <div class="flow-arrow" style="font-size:1.5em;">&larr;</div>
+      <div class="flow-box pos" style="min-width: 200px;">Heterogeneous NPO<br><small>&#946; = +0.552***</small></div>
+    </div>
+  </div>
+  <div class="cols anim anim-d2" style="margin-top: 10px;">
+    <div class="highlight" style="flex:1;">
+      <strong>1.</strong> NPO presence in a community reflects <strong>immigrant tension salience</strong>, not a direct acceptance mechanism.
+    </div>
+    <div class="highlight green" style="flex:1;">
+      <strong>2.</strong> <span class="text-green">Heterogeneous NPOs</span> significantly increase acceptance through diverse perspective exchange.
+    </div>
+    <div class="highlight gold" style="flex:1;">
+      <strong>3.</strong> <strong>Organizational composition</strong> is a critical, underexplored factor in immigrant integration research.
+    </div>
+  </div>
+</div>
+
+<!-- ============ SLIDE 24: Thank You ============ -->
+<div class="slide slide-final" data-slide="23">
+  <h2 class="anim anim-d1">Thank You</h2>
+  <p class="anim anim-d2">
+    <strong>Jung Wook Kim</strong> &middot; University of Seoul<br>
+    <strong>Yiinjung Kim</strong> &middot; Korea University<br>
+    <strong>Jihoon Jeong</strong> &middot; Texas A&amp;M International University
+  </p>
+  <div class="anim anim-d3" style="margin-top: 50px; padding: 20px 40px; border: 1px solid rgba(255,255,255,0.2); border-radius: 12px;">
+    <p style="font-size: 1.3em; font-weight: 300; opacity: 0.9;">Questions &amp; Discussion</p>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<!-- Navigation -->
+<div class="nav">
+  <button id="prevBtn" onclick="changeSlide(-1)" disabled>&larr; Previous</button>
+  <div class="progress">
+    <span id="slideNum">1</span> / <span id="totalSlides">24</span>
+  </div>
+  <button id="nextBtn" onclick="changeSlide(1)">Next &rarr;</button>
+</div>
+
+<script>
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  document.getElementById('totalSlides').textContent = total;
+
+  function showSlide(n) {
+    slides.forEach((s, i) => {
+      s.classList.remove('active', 'exit');
+      if (i < n) s.classList.add('exit');
+    });
+    slides[n].classList.add('active');
+    document.getElementById('slideNum').textContent = n + 1;
+    document.getElementById('prevBtn').disabled = (n === 0);
+    document.getElementById('nextBtn').disabled = (n === total - 1);
+    document.getElementById('progressBar').style.width = ((n + 1) / total * 100) + '%';
+  }
+
+  function changeSlide(dir) {
+    const next = current + dir;
+    if (next >= 0 && next < total) {
+      current = next;
+      showSlide(current);
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault(); changeSlide(1);
+    }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault(); changeSlide(-1);
+    }
+    if (e.key === 'Home') { current = 0; showSlide(0); }
+    if (e.key === 'End') { current = total - 1; showSlide(current); }
+  });
+
+  // Touch support
+  let touchStartX = 0;
+  document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', (e) => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) changeSlide(diff > 0 ? 1 : -1);
+  });
+
+  showSlide(0);
+</script>
+</body>
+</html>
